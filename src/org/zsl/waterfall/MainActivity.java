@@ -14,7 +14,7 @@ public class MainActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+//        setContentView(R.layout.activity_main);
         WaterfallLayout group = new WaterfallLayout(this);
         group.setFallCount(3);
         LayoutParams lp1 = new LayoutParams(100, 200);
@@ -33,11 +33,14 @@ public class MainActivity extends Activity {
         c3.setText("c3");
         
         group.addView(c1, lp1);
-        group.addView(c2, lp1);
-        group.addView(c3, lp1);
+//        group.addView(c2, lp1);
+//        group.addView(c3, lp1);
         
-        ViewGroup g = (ViewGroup) LayoutInflater.from(this).inflate(R.layout.activity_main, null);
-        g.addView(group, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+        group.setBackgroundColor(Color.BLUE);
+        
+        setContentView(group, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+//        ViewGroup g = (ViewGroup) LayoutInflater.from(this).inflate(R.layout.activity_main, null);
+//        g.addView(group, new LayoutParams(1000, 1000));
     }
 
     @Override

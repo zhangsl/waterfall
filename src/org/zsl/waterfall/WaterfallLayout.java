@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 public class WaterfallLayout extends ViewGroup {
+	private static final String TAG = "WaterfallLayout";
     private int mFallCount = 1;
     private int[] mHeights = null;
 
@@ -21,25 +22,31 @@ public class WaterfallLayout extends ViewGroup {
     
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-//        int childCount = getChildCount();
-//        
-//        for (int i = 0; i < childCount; i ++) {
-//            View child = getChildAt(i);
-//            int min = getMinHeightIndex();
-//            mHeights[min] = mHeights[min] + child.getMeasuredHeight();
-//        }
-//        
-//        int max = getMaxHeightIndex();
-//        setMeasuredDimension(ViewGroup.LayoutParams.MATCH_PARENT, mHeights[max]);
-//        
-//        clearHeights();
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+    	Log.d(TAG, "onMeasure");
+        int childCount = getChildCount();
+        int childWidth = MeasureSpec.getSize(widthMeasureSpec) / mFallCount;
+        int childWidetSpec = MeasureSpec.makeMeasureSpec(childWidth, MeasureSpec.EXACTLY);
+        
+        
+        for (int i = 0; i < childCount; i ++) {
+            View child = getChildAt(i);
+            int min = getMinHeightIndex();
+            mHeights[min] = mHeights[min] + child.getMeasuredHeight();
+            child.measure(childWidetSpec, heightMeasureSpec);
+        }
+        
+        int max = getMaxHeightIndex();
+        setMeasuredDimension(ViewGroup.LayoutParams.MATCH_PARENT, mHeights[max]);
+        
+        clearHeights();
+//        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
     }
 
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
+//    	super.onl
         int childCount = getChildCount();
-        Log.d("water", "left: " + l + "   top: " + t + "   r: " + r + "  b: " + b);
+        Log.d(TAG, "onLayout  left: " + l + "   top: " + t + "   r: " + r + "  b: " + b);
         for (int i = 0; i < childCount; i ++) {
             View child = getChildAt(i);
             int min = getMinHeightIndex();
@@ -48,6 +55,8 @@ public class WaterfallLayout extends ViewGroup {
             int childTop = mHeights[min];
             int childHeight = child.getMeasuredHeight();
             child.layout(childLeft, childTop, childLeft + child.getMeasuredWidth(), childTop + childHeight);
+            Log.d(TAG, "onLayout  left: " + childLeft + "   top: " + childTop + "   r: "
+            + childLeft + child.getMeasuredWidth() + "  b: " + childTop + childHeight);
             mHeights[min] = mHeights[min] + childHeight;
         }
         
