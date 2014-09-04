@@ -5,7 +5,6 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.ViewGroup.LayoutParams;
-import android.widget.AbsoluteLayout;
 import android.widget.TextView;
 
 public class MainActivity extends Activity {
@@ -13,11 +12,10 @@ public class MainActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        AbsoluteLayout absolute = new AbsoluteLayout(this);
         WaterfallLayout group = new WaterfallLayout(this);
         group.setFallCount(3);
         LayoutParams lp1 = new LayoutParams(50, 100);
-        LayoutParams lp2 = new LayoutParams(100, 100);
+        LayoutParams lp2 = new LayoutParams(100, 200);
         
         TextView c1 = new TextView(this);
         c1.setText("c1");
@@ -31,10 +29,19 @@ public class MainActivity extends Activity {
         c3.setBackgroundColor(Color.GRAY);
         c3.setText("c3");
         
+        TextView c4 = new TextView(this);
+        c4.setBackgroundColor(Color.GREEN);
+        c4.setText("c4");
+        
+        TextView c5 = new TextView(this);
+        c5.setBackgroundColor(Color.YELLOW);
+        c5.setText("c5");
+        
         group.addView(c1, lp1);
-//        absolute.addView(c1, lp1);
-        group.addView(c2, lp1);
+        group.addView(c2, lp2);
         group.addView(c3, lp1);
+        group.addView(c4, lp1);
+        group.addView(c5, lp2);
         
         group.setBackgroundColor(Color.BLUE);
         

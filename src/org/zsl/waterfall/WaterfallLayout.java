@@ -10,6 +10,7 @@ public class WaterfallLayout extends ViewGroup {
 	private static final String TAG = "WaterfallLayout";
     private int mFallCount = 1;
     private int[] mHeights = null;
+    private int mFallWidth = 0;
 
     public WaterfallLayout(Context context) {
         super(context);
@@ -32,16 +33,17 @@ public class WaterfallLayout extends ViewGroup {
     
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-    	Log.d(TAG, "onMeasure");
         int childCount = getChildCount();
-        int childWidth = MeasureSpec.getSize(widthMeasureSpec) / mFallCount;
-        int childWidetSpec = MeasureSpec.makeMeasureSpec(childWidth, MeasureSpec.EXACTLY);
-        
+        mFallWidth = MeasureSpec.getSize(widthMeasureSpec) / mFallCount;
+        int childWidetSpec = MeasureSpec.makeMeasureSpec(mFallWidth, MeasureSpec.EXACTLY);
+        int childHeight = 0;
         
         for (int i = 0; i < childCount; i ++) {
             View child = getChildAt(i);
+            LayoutParams params = child.getLayoutParams();
+            childHeight = params.height;
             int min = getMinHeightIndex();
-            mHeights[min] = mHeights[min] + child.getMeasuredHeight();
+            mHeights[min] = mHeights[min] + childHeight;
             child.measure(childWidetSpec, heightMeasureSpec);
         }
         
@@ -54,19 +56,19 @@ public class WaterfallLayout extends ViewGroup {
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
         int childCount = getChildCount();
-        int childLeft = l;
+        int childLeft = 0;
         for (int i = 0; i < childCount; i ++) {
             View child = getChildAt(i);
+            
             int min = getMinHeightIndex();
+            childLeft = mFallWidth * min + l;
+            LayoutParams params = child.getLayoutParams();
             int childTop = mHeights[min];
-            int childHeight = child.getMeasuredHeight();
+            int childHeight = params.height;
+            Log.d(TAG, "onLayout  MeasuredHeight " + childHeight);
             child.layout(childLeft, childTop, childLeft + child.getMeasuredWidth(), childTop + childHeight);
             mHeights[min] = mHeights[min] + childHeight;
-            childLeft += child.getMeasuredWidth();
             
-            Log.d(TAG, "onLayout  left: " + childLeft + "   top: " + childTop
-                    + "   r: " + (childLeft + child.getMeasuredWidth()) + "  b: "
-                    + (childTop + childHeight) + "  width: " + (r - l));
         }
         
         clearHeights();
